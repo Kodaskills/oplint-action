@@ -1,0 +1,11 @@
+{
+  "id": "test-plugin",
+  "name": "Test Plugin",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "A test plugin for oplint-action CI",
+  "author": "Test Author",
+  "authorUrl": "https://example.com",
+  "websiteUrl": "https://example.com",
+  "license": "MIT"
+}

@@ -1,0 +1,121 @@
+name: "oplint"
+description: "Run OPLint - Obsidian Plugin Linter - on your Obsidian plugin repository"
+author: "Kodaskills"
+branding:
+  icon: "check-circle"
+  color: "green"
+
+inputs:
+  path:
+    description: "Path to the Obsidian plugin directory to lint"
+    required: false
+    default: "."
+  version:
+    description: "OPLint version to use (defaults to latest)"
+    required: false
+    default: ""
+  summary:
+    description: "Write lint results to GitHub summary"
+    required: false
+    default: "false"
+  comment:
+    description: "Comment lint results on the pull request"
+    required: false
+    default: "false"
+  token:
+    description: "GitHub token for PR comments (defaults to github.token)"
+    required: false
+    default: ${{ github.token }}
+  badge_enabled:
+    description: "Generate a badge"
+    required: false
+    default: "false"
+  badge_style:
+    description: "Badge style (flat, flat-square, for-the-badge, plastic, social)"
+    required: false
+    default: "for-the-badge"
+  badge_endpoint:
+    description: "Write a Shields.io endpoint JSON file"
+    required: false
+    default: "false"
+  badge_endpoint_output:
+    description: "Path for the endpoint JSON file"
+    required: false
+    default: ".oplint-badge.json"
+  reporting_enabled:
+    description: "Generate additional report files"
+    required: false
+    default: "false"
+  reporting_formats:
+    description: "Comma-separated report formats (md, html, json)"
+    required: false
+    default: "md"
+  reporting_output_dir:
+    description: "Directory for generated report files"
+    required: false
+    default: "."
+  fail_on:
+    description: "Minimum severity that fails the job (error, warning, info, none)"
+    required: false
+    default: "error"
+
+outputs:
+  score:
+    description: "The compliance score (0-100)"
+    value: ${{ steps.lint.outputs.score }}
+  grade:
+    description: "The letter grade (A+, A, B+, B, C, D, F)"
+    value: ${{ steps.lint.outputs.grade }}
+  partial_coverage:
+    description: "Whether partial coverage was applied"
+    value: ${{ steps.lint.outputs.partial_coverage }}
+  violations:
+    description: "Total number of violations"
+    value: ${{ steps.lint.outputs.violations }}
+  badge_url:
+    description: "Shields.io static badge URL"
+    value: ${{ steps.lint.outputs.badge_url }}
+  badge_json_path:
+    description: "Path to the generated endpoint badge JSON file"
+    value: ${{ steps.lint.outputs.badge_json_path }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install jq
+      shell: bash
+      run: |
+        if ! command -v jq &> /dev/null; then
+          sudo apt-get update && sudo apt-get install -y jq
+        fi
+
+    - name: Set up environment
+      shell: bash
+      run: |
+        echo "RUNNER_OS=${{ runner.os }}" >> "$GITHUB_ENV"
+        echo "RUNNER_ARCH=${{ runner.arch }}" >> "$GITHUB_ENV"
+
+    - name: Download OPLint binary
+      shell: bash
+      env:
+        VERSION: ${{ inputs.version }}
+      run: bash ${{ github.action_path }}/lib/download.sh
+
+    - name: Run linter
+      id: lint
+      shell: bash
+      env:
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_SUMMARY: ${{ inputs.summary }}
+        INPUT_COMMENT: ${{ inputs.comment }}
+        INPUT_BADGE_ENABLED: ${{ inputs.badge_enabled }}
+        INPUT_BADGE_STYLE: ${{ inputs.badge_style }}
+        INPUT_BADGE_ENDPOINT: ${{ inputs.badge_endpoint }}
+        INPUT_BADGE_ENDPOINT_OUTPUT: ${{ inputs.badge_endpoint_output }}
+        INPUT_REPORTING_ENABLED: ${{ inputs.reporting_enabled }}
+        INPUT_REPORTING_FORMATS: ${{ inputs.reporting_formats }}
+        INPUT_REPORTING_OUTPUT_DIR: ${{ inputs.reporting_output_dir }}
+        INPUT_FAIL_ON: ${{ inputs.fail_on }}
+        EVENT_NUMBER: ${{ github.event.pull_request.number }}
+        GH_TOKEN: ${{ inputs.token }}
+      run: bash ${{ github.action_path }}/entrypoint.sh

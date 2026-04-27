@@ -1,0 +1,64 @@
+name: Test oplint-action
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test-action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run oplint on test plugin
+        id: oplint
+        uses: ./
+        with:
+          path: ./test/plugin
+          badge_enabled: true
+          badge_endpoint: true
+          badge_endpoint_output: .oplint-badge.json
+          comment: true
+          summary: true
+          fail_on: never
+
+      - name: Verify badge JSON was created
+        run: |
+          if [ ! -f .oplint-badge.json ]; then
+            echo "ERROR: .oplint-badge.json was not created"
+            exit 1
+          fi
+          echo "Badge JSON created successfully"
+
+      - name: Display badge JSON contents
+        run: cat .oplint-badge.json
+
+      - name: Verify outputs are populated
+        run: |
+          echo "score=${{ steps.oplint.outputs.score }}"
+          echo "grade=${{ steps.oplint.outputs.grade }}"
+          echo "violations=${{ steps.oplint.outputs.violations }}"
+          echo "partial_coverage=${{ steps.oplint.outputs.partial_coverage }}"
+          echo "badge_url=${{ steps.oplint.outputs.badge_url }}"
+          echo "badge_json_path=${{ steps.oplint.outputs.badge_json_path }}"
+
+      - name: Verify violations were detected
+        run: |
+          violations=${{ steps.oplint.outputs.violations }}
+          if [ "$violations" = "0" ]; then
+            echo "WARNING: Expected violations to be > 0 for meaningful CI test"
+          else
+            echo "OK: Found $violations violation(s)"
+          fi
+
+      - name: Validate badge JSON structure
+        run: |
+          if command -v jq &> /dev/null; then
+            jq empty .oplint-badge.json && echo "JSON is valid" || exit 1
+            score=$(jq -r '.message' .oplint-badge.json | grep -oP '\d+(?=%)' || echo "")
+            if [ -n "$score" ]; then
+              echo "Badge score: $score%"
+            fi
+          else
+            echo "jq not available, skipping JSON validation"
+          fi
