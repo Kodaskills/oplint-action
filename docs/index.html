@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>oplint-action — GitHub Action for Obsidian Plugin Compliance</title>
+  <meta name="description" content="GitHub Action to lint Obsidian plugins with OPLint — compliance score, PR comments, badges, and report artifacts in one step." />
+  <link rel="icon" href="https://raw.githubusercontent.com/kodaskills/oplint/main/docs/logo.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <main class="hero">
+    <div class="hero-inner">
+
+      <div class="hero-copy">
+        <a class="chip" href="https://github.com/marketplace/actions/oplint" target="_blank" rel="noopener">
+          <span class="chip-dot"></span>
+          GitHub Marketplace
+        </a>
+
+        <div class="brand">
+          <img src="https://raw.githubusercontent.com/kodaskills/oplint/main/docs/logo.svg" alt="oplint" width="40" height="40" />
+          <span class="brand-name">oplint<span class="brand-suffix">-action</span></span>
+        </div>
+
+        <p class="tagline">Lint your Obsidian plugin on every push.<br>Score, badge, PR comment — one step.</p>
+
+        <div class="actions">
+          <a class="btn btn-primary" href="https://github.com/kodaskills/oplint-action" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 0 0-2.5 15.6c.4.07.55-.17.55-.38v-1.34c-2.2.48-2.67-1.06-2.67-1.06-.36-.92-.88-1.16-.88-1.16-.72-.49.05-.48.05-.48.8.06 1.22.82 1.22.82.71 1.21 1.86.86 2.31.66.07-.51.28-.86.5-1.06-1.76-.2-3.6-.88-3.6-3.92 0-.87.31-1.58.82-2.13-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.81a7.6 7.6 0 0 1 4 0c1.53-1.02 2.2-.81 2.2-.81.44 1.1.16 1.92.08 2.12.51.55.82 1.26.82 2.13 0 3.05-1.85 3.72-3.61 3.91.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 8 0Z"/></svg>
+            View on GitHub
+          </a>
+          <a class="btn btn-ghost" href="https://oplint.kodaskills.co" target="_blank" rel="noopener">
+            OPLint docs
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 2 4 4-4 4"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-code">
+        <div class="code-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="code-title">.github/workflows/lint.yml</span>
+          <button class="copy-btn" id="copy-btn" aria-label="Copy">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+        <pre class="code-body" id="code-snippet"><code><span class="ck">name</span>: <span class="cs">Plugin compliance</span>
+<span class="ck">on</span>: [push, pull_request]
+
+<span class="ck">jobs</span>:
+  <span class="ck">lint</span>:
+    <span class="ck">runs-on</span>: ubuntu-latest
+    <span class="ck">steps</span>:
+      - <span class="ck">uses</span>: <span class="cs">actions/checkout@v4</span>
+      - <span class="ck">uses</span>: <span class="cs">kodaskills/oplint-action@v1</span>
+        <span class="ck">with</span>:
+          <span class="ck">summary</span>: true
+          <span class="ck">comment</span>: true
+          <span class="ck">badge_enabled</span>: true
+          <span class="ck">fail_on</span>: <span class="cs">error</span></code></pre>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
