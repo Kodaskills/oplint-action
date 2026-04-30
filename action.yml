@@ -1,4 +1,4 @@
-name: "oplint"
+name: "obsidian-plugin-lint"
 description: "Run OPLint - Obsidian Plugin Linter - on your Obsidian plugin repository"
 author: "Kodaskills"
 branding:

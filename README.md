@@ -6,7 +6,7 @@
 
 ### GitHub Action to run **OPLint** on your Obsidian plugin — compliance score, PR comments, badges, and report artifacts in one step.
 
-[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-oplint--action-purple?style=for-the-badge&logo=github)](https://github.com/marketplace/actions/oplint)
+[![GitHub Marketplace](https://img.shields.io/badge/Marketplace-obsidian--plugin--lint-purple?style=for-the-badge&logo=github)](https://github.com/marketplace/actions/obsidian-plugin-lint)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
 </div>
