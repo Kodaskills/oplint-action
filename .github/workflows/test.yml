@@ -2,7 +2,19 @@ name: Test oplint-action
 
 on:
   push:
+    paths:
+      - "lib/**"
+      - "tests/**/*"
+      - "action.yaml"
+      - "entrypoint.sh"
+      - ".github/workflows/test.yml"
   pull_request:
+    paths:
+      - "lib/**"
+      - "tests/**/*"
+      - "action.yaml"
+      - "entrypoint.sh"
+      - ".github/workflows/test.yml"
 
 jobs:
   test-action:
